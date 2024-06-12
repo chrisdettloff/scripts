@@ -119,7 +119,7 @@ for nfs in ${!nfs_share_*}; do
 
     # Add to /etc/fstab if not already present
     if ! grep -q "$server:$share_path" /etc/fstab; then
-        echo "$server:$share_path $mount_point nfs defaults 0 0" | sudo tee -a /etc/fstab
+        echo "$server:$share_path $mount_point nfs rw,hard,rsize=65536,wsize=65536,vers=3,tcp,defaults 0 0" | sudo tee -a /etc/fstab
     fi
 done
 
@@ -132,7 +132,8 @@ for user in ${!user_*}; do
     echo "Creating user $username with UID $uid and adding to group $groupname..."
     sudo useradd -m -u $uid -g $gid $username
     echo "Setting password for user $username..."
-    sudo passwd $username
+    MYPASS=$(</dev/urandom tr -dc_A-Z-a-z-0-9 | head -c${1:-32};echo;)
+    echo -e "$MYPASS\n$MYPASS" | sudo passwd $username
 done
 
 # Configure file permissions
