@@ -1,0 +1,21 @@
+# Filesystems to mount (format: volume_id mount_point)
+filesystem_1=google-persistent-disk-1:/mnt/data
+filesystem_2=google-persistent-disk-2:/mnt/backup
+
+# NFS shares to mount (format: nfs_server:share_path mount_point)
+nfs_share_1=192.168.1.100:/export/share:/mnt/nfs_share
+
+# Swap spaces to initialize (format: volume_id)
+swap_1=google-swap-disk-1
+swap_2=google-swap-disk-2
+
+# Users to create (format: username:groupname:uid:gid)
+user_1=myuser:mygroup:1001:1001
+user_2=anotheruser:anothergroup:1002:1002
+
+# File permissions to configure (format: path owner group permissions)
+permission_1=/mnt/data:myuser:mygroup:755
+permission_2=/mnt/nfs_share:anotheruser:anothergroup:755
+
+# AD groups to ensure in sssd.conf and grant sudo access
+ad_groups=(group1 group2 group3)
