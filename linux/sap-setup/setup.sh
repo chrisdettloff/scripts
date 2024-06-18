@@ -89,8 +89,8 @@ for fs in ${!filesystem_*}; do
         echo "Device for volume ID $volume_id not found!"
         continue
     fi
-    echo "Formatting $device to ext4..."
-    sudo mkfs.ext4 $device
+    echo "Formatting $device to xfs..."
+    sudo mkfs.xfs $device
     
     # Get the UUID of the device
     uuid=$(sudo blkid -s UUID -o value $device)
@@ -105,7 +105,7 @@ for fs in ${!filesystem_*}; do
 
     # Add to /etc/fstab if not already present
     if ! grep -q "$uuid" /etc/fstab; then
-        echo "UUID=$uuid $mount_point ext4 defaults 0 2" | sudo tee -a /etc/fstab
+        echo "UUID=$uuid $mount_point xfs defaults 0 2" | sudo tee -a /etc/fstab
     fi
 done
 
