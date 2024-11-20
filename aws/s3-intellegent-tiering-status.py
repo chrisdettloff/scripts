@@ -16,11 +16,24 @@ def main():
         # Check for Intelligent-Tiering configurations
         try:
             configs = []
-            paginator = s3.get_paginator('list_bucket_intelligent_tiering_configurations')
-            page_iterator = paginator.paginate(Bucket=bucket_name)
+            continuation_token = None
+            while True:
+                if continuation_token:
+                    response = s3.list_bucket_intelligent_tiering_configurations(
+                        Bucket=bucket_name,
+                        ContinuationToken=continuation_token
+                    )
+                else:
+                    response = s3.list_bucket_intelligent_tiering_configurations(
+                        Bucket=bucket_name
+                    )
 
-            for page in page_iterator:
-                configs.extend(page.get('IntelligentTieringConfigurationList', []))
+                configs.extend(response.get('IntelligentTieringConfigurationList', []))
+
+                if response.get('IsTruncated'):
+                    continuation_token = response.get('NextContinuationToken')
+                else:
+                    break
 
             for config in configs:
                 if config['Status'] == 'Enabled':
@@ -67,4 +80,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
